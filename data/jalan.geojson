@@ -1,0 +1,44 @@
+﻿{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "REMARK": "Jalan Utama Flores Timur" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [122.950, -8.430],
+          [123.050, -8.500],
+          [123.160, -8.620],
+          [123.300, -8.700]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "REMARK": "Jalan Desa" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [122.820, -8.580],
+          [122.905, -8.620],
+          [122.980, -8.670],
+          [123.090, -8.720]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "REMARK": "Jalan Pantai" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [123.020, -8.350],
+          [123.120, -8.390],
+          [123.260, -8.470],
+          [123.380, -8.545]
+        ]
+      }
+    }
+  ]
+}

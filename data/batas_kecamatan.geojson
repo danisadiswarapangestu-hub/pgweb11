@@ -1,0 +1,65 @@
+﻿{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "WADMKC": "Larantuka" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [122.915, -8.350],
+          [123.060, -8.335],
+          [123.110, -8.420],
+          [123.035, -8.500],
+          [122.930, -8.475],
+          [122.915, -8.350]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "WADMKC": "Ilwaki" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [122.780, -8.620],
+          [122.905, -8.565],
+          [122.980, -8.645],
+          [122.915, -8.760],
+          [122.800, -8.770],
+          [122.780, -8.620]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "WADMKC": "Lewolema" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [122.985, -8.730],
+          [123.180, -8.700],
+          [123.250, -8.790],
+          [123.145, -8.930],
+          [123.010, -8.905],
+          [122.985, -8.730]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "WADMKC": "Solor" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [123.250, -8.470],
+          [123.390, -8.430],
+          [123.470, -8.520],
+          [123.420, -8.620],
+          [123.280, -8.610],
+          [123.250, -8.470]
+        ]]
+      }
+    }
+  ]
+}

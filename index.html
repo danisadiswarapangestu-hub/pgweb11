@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet JS - WebGIS Flores Timur</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <!-- Bootstrap Icons CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Peta memenuhi seluruh layar tanpa navbar */
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* Styling Layer Control Leaflet */
+        .leaflet-control-layers {
+            border-radius: 10px !important;
+            border: 1px solid rgba(0, 0, 0, 0.08) !important;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14) !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 13px !important;
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .leaflet-control-layers-expanded {
+            padding: 12px 16px !important;
+        }
+
+        .leaflet-control-layers label i {
+            margin-right: 6px;
+            color: #004d40;
+        }
+
+        /* Styling Skala & Atribusi */
+        .leaflet-control-scale-line,
+        .leaflet-control-attribution {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 11px !important;
+        }
+
+        /* =====================================================
+           KOTAK LEGENDA SCROLLABLE DI POJOK KIRI BAWAH
+           ===================================================== */
+        .legend-box {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(6px);
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+            min-width: 175px;
+        }
+
+        .legend-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            color: #0f172a;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .legend-scroll {
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        /* Scrollbar tipis & rapi */
+        .legend-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .legend-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        .legend-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .legend-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .legend-scroll img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MAP CONTAINER FULLSCREEN (TANPA NAVBAR) -->
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // =====================================================
+        // 1. INISIALISASI PETA & BASEMAPS
+        // =====================================================
+        var map = L.map("map").setView([-8.2848467, 123.1649780], 10);
+
+        var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+
+        var esriWorldImagery = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+            attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        });
+
+        osm.addTo(map);
+
+        // Skala (10 km di kiri bawah)
+        L.control.scale({
+            imperial: false,
+            position: "bottomleft"
+        }).addTo(map);
+
+        // =====================================================
+        // 2. LAYER WMS DARI GEOSERVER (WORKSPACE: pgweb)
+        // =====================================================
+        var geoserverBaseUrl = "http://localhost:8080/geoserver/pgweb/wms";
+
+        var wmsBatasKecamatan = L.tileLayer.wms(geoserverBaseUrl, {
+            layers: "pgweb:batas_kecamatan",
+            format: "image/png",
+            transparent: true,
+            version: "1.1.0",
+            attribution: "GeoServer PGWEB"
+        }).addTo(map);
+
+        var wmsJalan = L.tileLayer.wms(geoserverBaseUrl, {
+            layers: "pgweb:jalan",
+            format: "image/png",
+            transparent: true,
+            version: "1.1.0",
+            attribution: "GeoServer PGWEB"
+        }).addTo(map);
+
+        // =====================================================
+        // 3. LAYER CONTROL COLLAPSED DI KANAN ATAS
+        // =====================================================
+        var baseMaps = {
+            '<i class="bi bi-map-fill"></i> OpenStreetMap': osm,
+            '<i class="bi bi-globe-americas"></i> Esri World Imagery': esriWorldImagery
+        };
+
+        var overlayMaps = {
+            '<i class="bi bi-bounding-box"></i> Batas Kecamatan': wmsBatasKecamatan,
+            '<i class="bi bi-signpost-fill"></i> Jalan': wmsJalan
+        };
+
+        L.control.layers(baseMaps, overlayMaps, {
+            collapsed: true,
+            position: "topright"
+        }).addTo(map);
+
+        // =====================================================
+        // 4. KONTROL LEGENDA OTOMATIS DARI GEOSERVER
+        // =====================================================
+        var legend = L.control({ position: "bottomleft" });
+
+        legend.onAdd = function (map) {
+            var div = L.DomUtil.create("div", "legend-box");
+            var legendGraphicUrl = geoserverBaseUrl +
+                "?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=pgweb:batas_kecamatan" +
+                "&LEGEND_OPTIONS=fontName:SansSerif;fontSize:12;fontAntiAliasing:true;fontColor:0x1e293b;dpi:110";
+
+            div.innerHTML =
+                '<div class="legend-title">Legenda</div>' +
+                '<div class="legend-scroll">' +
+                '<img src="' + legendGraphicUrl + '" alt="Legenda Batas Kecamatan">' +
+                '</div>';
+
+            L.DomEvent.disableClickPropagation(div);
+            L.DomEvent.disableScrollPropagation(div);
+
+            return div;
+        };
+
+        legend.addTo(map);
+    </script>
+
+</body>
+
+</html>
